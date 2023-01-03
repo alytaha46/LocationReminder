@@ -76,11 +76,12 @@ class ReminderListFragment : BaseFragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.logout -> {
-                AuthUI.getInstance().signOut(requireContext())
-                Log.e("TAG","Logged Out")
-                val intent = Intent(this.context, AuthenticationActivity::class.java)
-                startActivity(intent)
-                activity?.finish()
+                AuthUI.getInstance().signOut(requireContext()).addOnCompleteListener {
+                    Log.e("TAG", "Logged Out")
+                    val intent = Intent(this.context, AuthenticationActivity::class.java)
+                    startActivity(intent)
+                    activity?.finish()
+                }
             }
         }
         return super.onOptionsItemSelected(item)

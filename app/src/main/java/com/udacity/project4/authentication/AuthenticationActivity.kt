@@ -36,13 +36,17 @@ class AuthenticationActivity : AppCompatActivity() {
                 Log.e("TAG", "UNAUTHENTICATED")
             else {
                 Log.e("TAG", "AUTHENTICATED")
-                val intent = Intent(this, RemindersActivity::class.java)
-                startActivity(intent)
-                finish()
+                moveToReminderListActivity()
             }
         })
         login_button.setOnClickListener { launchSignInFlow() }
 
+    }
+
+    private fun moveToReminderListActivity() {
+        val intent = Intent(this, RemindersActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 
     private fun launchSignInFlow() {
@@ -78,8 +82,7 @@ class AuthenticationActivity : AppCompatActivity() {
                     "tag",
                     "Successfully signed in user ${FirebaseAuth.getInstance().currentUser?.displayName}!"
                 )
-                val intent = Intent(this, RemindersActivity::class.java)
-                startActivity(intent)
+                moveToReminderListActivity()
             } else {
                 // Sign in failed. If response is null the user canceled the
                 // sign-in flow using the back button. Otherwise check

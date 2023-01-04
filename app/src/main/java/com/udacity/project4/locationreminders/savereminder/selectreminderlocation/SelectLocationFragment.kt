@@ -42,7 +42,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     private lateinit var marker: Marker
     private lateinit var pointOfInterest: PointOfInterest
     lateinit var fusedLocationClient: FusedLocationProviderClient
-    val REQUEST_TURN_DEVICE_LOCATION_ON = 101
+
 
 
     override fun onCreateView(

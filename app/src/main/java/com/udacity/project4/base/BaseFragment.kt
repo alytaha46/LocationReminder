@@ -39,6 +39,7 @@ abstract class BaseFragment : Fragment() {
     val fineLocationPermissionMessages = arrayOf(
         "current location and Background Location"
     )
+    val REQUEST_TURN_DEVICE_LOCATION_ON = 101
 
 
     fun showDialog(

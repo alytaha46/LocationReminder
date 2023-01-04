@@ -71,7 +71,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     private fun onLocationSelected() {
         if (::pointOfInterest.isInitialized) {
             _viewModel.setPOILocation(pointOfInterest)
-            findNavController().navigate(SelectLocationFragmentDirections.actionSelectLocationFragmentToSaveReminderFragment())
+            findNavController().popBackStack()
         } else {
             Snackbar.make(
                 this.view!!,

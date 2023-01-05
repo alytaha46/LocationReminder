@@ -99,10 +99,6 @@ class SaveReminderFragment : BaseFragment() {
                     )
                 }
             }
-
-//            TODO: use the user entered reminder details to:
-//             1) add a geofencing request
-//             2) save the reminder to the local db
         }
     }
 
@@ -134,7 +130,7 @@ class SaveReminderFragment : BaseFragment() {
     @SuppressLint("MissingPermission")
     fun checkGPSIsOn(enableBox: Boolean) {
         val locationRequest = LocationRequest.create().apply {
-            priority = LocationRequest.PRIORITY_LOW_POWER
+            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
         val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
 
@@ -201,11 +197,6 @@ class SaveReminderFragment : BaseFragment() {
             .build()
         geofencingClient.addGeofences(geofencingRequest, geofencePendingIntent).run {
             addOnCompleteListener {
-                Toast.makeText(
-                    requireActivity(), "Reminder Added",
-                    Toast.LENGTH_SHORT
-                )
-                    .show()
                 _viewModel.validateAndSaveReminder(reminderDataItem)
             }
             addOnFailureListener {

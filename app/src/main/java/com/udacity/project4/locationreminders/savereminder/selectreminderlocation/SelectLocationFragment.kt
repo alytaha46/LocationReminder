@@ -239,7 +239,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     @SuppressLint("MissingPermission")
     fun checkGPSIsOn(enableBox: Boolean) {
         val locationRequest = LocationRequest.create().apply {
-            priority = LocationRequest.PRIORITY_LOW_POWER
+            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
         val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
 

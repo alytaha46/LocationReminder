@@ -74,8 +74,8 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
             findNavController().popBackStack()
         } else {
             Snackbar.make(
-                this.view!!,
-                "No Location Selected",
+                this.requireView(),
+                R.string.err_save_location,
                 Snackbar.LENGTH_LONG
             ).show()
         }
@@ -271,7 +271,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
                 }
             } else {
                 Snackbar.make(
-                    this.view!!,
+                    this.requireView(),
                     R.string.location_required_error,
                     Snackbar.LENGTH_LONG
                 ).setAction(android.R.string.ok) {

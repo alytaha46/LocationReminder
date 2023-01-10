@@ -1,10 +1,13 @@
 package com.udacity.project4
 
 import android.app.Application
+import android.os.IBinder
+import android.view.WindowManager
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.IdlingRegistry
+import androidx.test.espresso.Root
 import androidx.test.espresso.ViewAssertion
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions
@@ -21,6 +24,8 @@ import com.udacity.project4.locationreminders.savereminder.SaveReminderViewModel
 import com.udacity.project4.util.DataBindingIdlingResource
 import com.udacity.project4.util.monitorActivity
 import kotlinx.coroutines.runBlocking
+import org.hamcrest.Description
+import org.hamcrest.TypeSafeMatcher
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -30,13 +35,14 @@ import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
 import org.koin.dsl.module
 import org.koin.test.AutoCloseKoinTest
+import org.koin.test.KoinTest
 import org.koin.test.get
 
 @RunWith(AndroidJUnit4::class)
 @LargeTest
 //END TO END test to black box test the app
-class RemindersActivityTest :
-    AutoCloseKoinTest() {// Extended Koin Test - embed autoclose @after method to close Koin after every test
+class RemindersActivityTest : TypeSafeMatcher<Root>(),
+    KoinTest {// Extended Koin Test - embed autoclose @after method to close Koin after every test
 
     private lateinit var repository: ReminderDataSource
     private lateinit var appContext: Application
@@ -81,6 +87,11 @@ class RemindersActivityTest :
         }
     }
 
+    @After
+    fun closeKoin() {
+        stopKoin()
+    }
+
     @Before
     fun registerIdlingResource() {
         IdlingRegistry.getInstance().register(dataBindingIdlingResource)
@@ -123,10 +134,30 @@ class RemindersActivityTest :
         Espresso.onView(withId(R.id.map_view)).perform(ViewActions.click())
         Espresso.onView(withId(R.id.save_button)).perform(ViewActions.click())
         Espresso.onView(withId(R.id.saveReminder)).perform(ViewActions.click())
-        Espresso.onView(ViewMatchers.withText("Google")).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-        Espresso.onView(ViewMatchers.withText("Google Company")).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        Espresso.onView(ViewMatchers.withText("Google"))
+            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        Espresso.onView(ViewMatchers.withText("Google Company"))
+            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        Espresso.onView(ViewMatchers.withText(R.string.reminder_saved))
+            .inRoot(this).check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
         activityScenario.close()
         Thread.sleep(2000)
+    }
+
+    override fun describeTo(description: Description?) {
+        description?.appendText("toast")
+    }
+
+    override fun matchesSafely(item: Root?): Boolean {
+        val type: Int = item!!.windowLayoutParams?.get()?.type ?: 0
+        if (type == WindowManager.LayoutParams.TYPE_TOAST) {
+            val windowToken: IBinder = item.decorView!!.windowToken
+            val appToken: IBinder = item.decorView.applicationWindowToken
+            if (windowToken === appToken) {
+                return true
+            }
+        }
+        return false
     }
 
 
